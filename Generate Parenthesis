@@ -1,0 +1,23 @@
+class Solution {
+public:
+    bool balance(string &s){
+        int v=0;
+        for(char c:s){
+            if (c=='(') v++;
+            else v--;
+            if (v<0) return false;
+        }
+        return true;
+    }
+    vector<string> generateParenthesis(int n) {
+        string s(n,'(');
+        s+= string(n,')');
+        vector<string> result;
+        sort(s.begin(),s.end());
+        do{
+            if (balance(s))
+            result.push_back(s);
+        } while(next_permutation(s.begin(),s.end()));
+        return result;
+    }
+};
