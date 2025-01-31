@@ -1,0 +1,26 @@
+int max(int a,int b){
+    return a>b?a:b;
+}
+
+int min(int a,int b){
+    return a<b?a:b;
+}
+
+int maxArea(int* height, int heightSize) {
+    int l=0,r=heightSize-1;
+    int capacity=0;
+    while(l<r){
+        capacity=max(capacity,min(height[l],height[r])*(r-l));
+        if(height[l]<height[r]) l++;
+        else if(height[r]<height[l]) r--;
+        else{
+            if(height[l+1]>height[r-1]) l++;
+            else if(height[l+1]<height[r-1]) r--;
+            else{
+                l++;
+                r--;
+            }
+        }
+    }
+    return capacity;
+}
