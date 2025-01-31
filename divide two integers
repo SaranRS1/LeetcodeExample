@@ -1,0 +1,31 @@
+int divide(int dividend, int divisor) {
+    if(!dividend) return 0;
+    if(!divisor) return INT_MAX;
+    long long divid=(long long)dividend;
+    long long divis=(long long)divisor;
+    if(divis==-1) return (int)(-1*divid+1);
+
+    long long t=divid<0?(-1*divid):divid;
+    long long p=divis<0?(-1*divis):divis;
+    long long q=0;
+    if(t<q) return 0;
+    while(t>=p){
+    long long c=0;
+    while(t>=p){
+        p<<=1;
+        c++;
+        if(p>=t){
+            t-=p>>1;
+            p>>=1;
+            q+=c;
+        }
+    }
+    p=divis<0?(-1*divis):divis;
+    }
+    if((divis<0 && divid<0)||(divis>0 && divid>0)){
+        return (int)q;
+    }
+    return (int)(-1*q);
+
+    
+}
