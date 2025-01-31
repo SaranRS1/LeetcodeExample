@@ -1,0 +1,23 @@
+
+int bfs(int** grid, int gridSize, int* gridColSize,int i,int j){
+    int fish =0;
+    fish+=grid[i][j];
+    grid[i][j]=0;
+    if(i>0 && grid[i-1][j]) fish+=bfs(grid,gridSize,gridColSize,i-1,j);
+    if(i<gridSize-1 && grid[i+1][j]) fish+=bfs(grid,gridSize,gridColSize,i+1,j);
+    if(j>0 && grid[i][j-1]) fish+=bfs(grid,gridSize,gridColSize,i,j-1);
+    if(j<*gridColSize-1 && grid[i][j+1]) fish+=bfs(grid,gridSize,gridColSize,i,j+1);
+    return fish;
+}
+int findMaxFish(int** grid, int gridSize, int* gridColSize) {
+    int maxFish=0;
+    for(int i=0;i<gridSize;i++){
+        for(int j=0;j<*gridColSize;j++){
+            if(!grid[i][j]) continue;
+            int fish=bfs(grid,gridSize,gridColSize,i,j);
+            if (fish>maxFish) maxFish = fish;
+
+        }
+    }
+    return maxFish;
+}
