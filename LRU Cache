@@ -1,0 +1,102 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX 10000
+
+typedef struct Node {
+    int key, val;
+    struct Node *next, *prev;
+} Node;
+
+typedef struct {
+    int capacity;
+    int size;
+    Node* hashtable[MAX];
+    Node *head, *tail;
+} LRUCache;
+
+void insert(LRUCache *obj, Node *node) {
+    node->next=obj->head->next;
+    node->prev=obj->head;
+    obj->head->next=node;
+    node->next->prev=node;
+}
+
+void removeNode(Node *node) {
+    Node *prev=node->prev;
+    Node *next=node->next;
+    prev->next=node->next;
+    next->prev=node->prev;
+}
+
+LRUCache* lRUCacheCreate(int capacity) {
+    LRUCache *cache = (LRUCache*)malloc(sizeof(LRUCache));
+    cache->capacity = capacity;
+    cache->size = 0;
+    Node *t=(Node*)malloc(sizeof(Node));
+    t->key=t->val=0;
+    t->prev=t->next=NULL;
+    cache->head = cache->tail = t;
+    cache->head->next= cache->tail;
+    cache->tail->prev=cache->head;
+    memset(cache->hashtable, 0, sizeof(cache->hashtable));
+    return cache;
+}
+
+int lRUCacheGet(LRUCache* obj, int key) {
+    printf("\nget %d",key);
+    Node *node = obj->hashtable[key];
+    if (node!=NULL) {
+        printf("\ninside get function %d",key);
+        // Move the accessed node to the front
+        if (node != obj->head->next) {
+            removeNode(node);
+            insert(obj, node);
+        }
+        return node->val;
+    }
+    return -1; // Return -1 if the key does not exist
+}
+
+void lRUCachePut(LRUCache* obj, int key, int value) {
+    printf("\nput %d",key);
+    Node *node = obj->hashtable[key];
+    if (node!=NULL) {
+        node->val = value;
+        // Move the updated node to the front
+        if (node != obj->head->next) {
+            removeNode(node);
+            insert(obj, node);
+        }
+    } else {
+        Node *newNode = (Node*)malloc(sizeof(Node));
+        newNode->key = key;
+        newNode->val = value;
+        obj->hashtable[key] = newNode;
+        insert(obj, newNode);
+        obj->size++;
+        
+        if (obj->size > obj->capacity) {
+            // Remove the least recently used node
+            Node *lru = obj->tail->prev;
+            if (lru != NULL) {
+                removeNode( lru);
+                obj->hashtable[lru->key] = NULL;
+                printf("\nremoving lru node %d",lru->key);
+                free(lru);
+                obj->size--;
+            }
+        }
+    }
+}
+
+void lRUCacheFree(LRUCache* obj) {
+    Node *current = obj->head;
+    while (current!=obj->tail) {
+        Node *next = current->next;
+        free(current);
+        current = next;
+    }
+    free(obj);
+}
