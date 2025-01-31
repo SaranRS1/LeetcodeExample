@@ -1,0 +1,41 @@
+int myAtoi(char* s) {
+    long long sum=0;
+    int sign=1;
+    int signflag=0;
+    int spaceflag=0;
+    for(int i=0;((s[i]-'0')<10 &&(s[i]-'0') >=0)||(s[i]=='+'||s[i]=='-'||s[i]==' ');i++){
+        switch(s[i]){
+            case '-':
+            printf("\ncase - ");
+            spaceflag=1;
+            if(signflag){
+                s[i+1]='j';
+                break;
+            } 
+            sign=-1;
+            signflag=1;
+            break;
+            case '+':
+            printf("\ncase + ");
+            spaceflag=1;
+            if(signflag) s[i+1]='j';
+            signflag=1;
+            break;
+            case ' ':
+            printf("\ncase space ");
+            if(spaceflag) s[i+1]='j';
+            break;
+            default:
+            printf("\ncase def %d  sum = %d " , s[i]-'0',sum);
+            signflag=1;
+            spaceflag=1;
+            sum+=s[i]-'0';
+            sum*=10;
+            if(sum/10 >INT_MAX) return (sign>0)?INT_MAX:INT_MIN;
+            break;
+        }
+    }
+    printf("\nfinal %ld",sum);
+    return sign * (int)(sum/10);
+    
+}
