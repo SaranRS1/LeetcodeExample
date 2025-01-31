@@ -1,0 +1,41 @@
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+char** wordSubsets(char** words1, int words1Size, char** words2, int words2Size, int* returnSize) {
+
+    int maxfreq[26]={0};
+
+    for(int i=0;i<words2Size;i++){
+        int freq[26]={0};
+        for(int j=0;words2[i][j]!='\0';j++){
+            int t=words2[i][j]-'a';
+            freq[t]++;
+            if(freq[t]>maxfreq[t]){
+                maxfreq[t]=freq[t];
+            }
+        }
+    }
+
+    char** universalWords= (char**)malloc(words1Size*sizeof(char*));
+    *returnSize=0;
+    for(int i=0;i<words1Size;i++){
+        int freq[26]={0};
+        int flag=1;
+        for(int j=0;words1[i][j]!='\0';j++){
+            int t=words1[i][j]-'a';
+            freq[t]++;
+        }
+        for(int j=0;j<26;j++){
+            if(maxfreq[j]>freq[j]){
+                flag=0;
+                break;
+            }
+        }
+
+        if(flag){
+            universalWords[*returnSize]=words1[i];
+            (*returnSize)++;
+        }
+    }
+    return universalWords; 
+}
